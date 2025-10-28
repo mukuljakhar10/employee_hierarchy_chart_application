@@ -1,18 +1,14 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import type { User, AuthState } from '../../types/index.ts';
-import keycloakInstance from '../../services/keycloakService';
+import keycloakInstance, { resetKeycloak } from '../../services/keycloakService';
 
 // Async thunk for checking Keycloak authentication status
 export const checkAuthStatus = createAsyncThunk(
   'auth/checkAuthStatus',
   async (_, { rejectWithValue }) => {
     try {
-      const authenticated = await keycloakInstance.init({
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
-      });
-
-      if (authenticated && keycloakInstance.tokenParsed) {
+      // Check if user is authenticated (don't initialize again)
+      if (keycloakInstance.authenticated && keycloakInstance.tokenParsed) {
         const user: User = {
           id: keycloakInstance.tokenParsed.sub || '',
           username: keycloakInstance.tokenParsed.preferred_username || '',
@@ -25,6 +21,7 @@ export const checkAuthStatus = createAsyncThunk(
       }
       return null;
     } catch (error) {
+      console.error('Failed to check authentication status:', error);
       return rejectWithValue('Failed to check authentication status');
     }
   }
@@ -35,9 +32,10 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      await keycloakInstance.logout();
+      resetKeycloak();
       return null;
     } catch (error) {
+      console.error('Failed to logout:', error);
       return rejectWithValue('Logout failed');
     }
   }

@@ -69,12 +69,6 @@ export interface SearchBarProps {
   departments: string[];
 }
 
-export interface LoginFormProps {
-  onLogin: (username: string, password: string) => void;
-  isLoading: boolean;
-  error: string | null;
-}
-
 // API response types
 export interface ApiResponse<T> {
   data: T;

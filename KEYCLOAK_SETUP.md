@@ -50,10 +50,10 @@ Keycloak will be available at: `http://localhost:8080`
 5. Enable "Client authentication" toggle (OFF - keep it public)
 6. Click "Next"
 7. In "Valid redirect URIs", add:
-   - `http://localhost:5174/*`
-   - `http://localhost:5174/dashboard`
+   - `http://localhost:5173/*`
+   - `http://localhost:5173/dashboard`
 8. In "Web origins", add:
-   - `http://localhost:5174`
+   - `http://localhost:5173`
 9. Click "Save"
 
 ### 2.4 Create Test Users
@@ -110,12 +110,12 @@ npm install
 npm run dev
 ```
 
-Application will be available at: `http://localhost:5174`
+Application will be available at: `http://localhost:5173`
 
 ## Step 4: Test the Authentication Flow
 
 ### Login Flow
-1. Visit `http://localhost:5174`
+1. Visit `http://localhost:5173`
 2. You'll be redirected to login page
 3. Click "Login with Keycloak"
 4. You'll be redirected to Keycloak login page
@@ -158,7 +158,7 @@ Application will be available at: `http://localhost:5174`
 
 ### Issue: "Redirect URI mismatch"
 - Verify redirect URIs in Keycloak client settings
-- Should include `http://localhost:5174/*`
+- Should include `http://localhost:5173/*`
 
 ### Issue: "Token validation failed"
 - Clear browser cache and cookies

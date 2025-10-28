@@ -19,7 +19,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../store';
 import { toggleTheme } from '../../store/slices/themeSlice';
 import { logoutUser } from '../../store/slices/authSlice';
-import keycloakInstance from '../../services/keycloakService';
+import keycloakInstance, { resetKeycloak } from '../../services/keycloakService';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -43,10 +43,11 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      dispatch(logoutUser());
       await keycloakInstance.logout({
         redirectUri: `${window.location.origin}/login`,
       });
+      resetKeycloak();
+      dispatch(logoutUser());
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -57,7 +58,7 @@ const Header: React.FC = () => {
       position="sticky" 
       elevation={0}
       className="dashboard-header"
-      sx={{ 
+      style={{ 
         backgroundColor: 'var(--bg-primary)', 
         borderBottom: '1px solid var(--border-primary)',
         zIndex: 1100
@@ -67,7 +68,7 @@ const Header: React.FC = () => {
         <Typography 
           variant="h6" 
           component="div" 
-          sx={{ flexGrow: 1, color: 'var(--text-primary)' }}
+          className="flex-grow text-primary"
         >
           Employee Hierarchy Chart
         </Typography>
@@ -76,7 +77,7 @@ const Header: React.FC = () => {
           {/* Theme Toggle */}
           <IconButton
             onClick={handleThemeToggle}
-            sx={{ color: 'var(--text-secondary)' }}
+            className="text-secondary"
             aria-label="toggle theme"
           >
             {theme === 'light' ? <Brightness4 /> : <Brightness7 />}
@@ -84,13 +85,8 @@ const Header: React.FC = () => {
 
           {/* User Menu */}
           <Box 
-            className="flex items-center space-x-2 cursor-pointer rounded-lg p-2 transition-colors"
+            className="flex items-center space-x-2 cursor-pointer rounded-lg p-2 transition-colors hover:bg-tertiary"
             onClick={handleMenuClick}
-            sx={{
-              '&:hover': {
-                backgroundColor: 'var(--bg-tertiary)'
-              }
-            }}
           >
             <Avatar 
               className="bg-blue-600 text-white w-8 h-8 text-sm"
@@ -101,13 +97,13 @@ const Header: React.FC = () => {
             <Box className="hidden sm:block">
               <Typography 
                 variant="body2" 
-                sx={{ color: 'var(--text-primary)', fontWeight: 500 }}
+                className="text-primary font-semibold"
               >
                 {user?.name}
               </Typography>
               <Typography 
                 variant="caption" 
-                sx={{ color: 'var(--text-secondary)' }}
+                className="text-secondary"
               >
                 {user?.role}
               </Typography>
@@ -127,45 +123,33 @@ const Header: React.FC = () => {
         >
           <MenuItem 
             onClick={handleMenuClose}
-            className="flex items-center space-x-2"
-            sx={{
-              color: 'var(--text-primary)',
-              '&:hover': {
-                backgroundColor: 'var(--bg-tertiary)'
-              }
-            }}
+            className="flex items-center space-x-2 text-primary hover:bg-tertiary"
           >
-            <Person sx={{ color: 'var(--text-tertiary)' }} />
+            <Person className="text-tertiary" />
             <Box>
               <Typography 
                 variant="body2" 
-                sx={{ fontWeight: 500, color: 'var(--text-primary)' }}
+                className="font-semibold text-primary"
               >
                 {user?.name}
               </Typography>
               <Typography 
                 variant="caption" 
-                sx={{ color: 'var(--text-secondary)' }}
+                className="text-secondary"
               >
                 {user?.username}
               </Typography>
             </Box>
           </MenuItem>
           
-          <Divider sx={{ borderColor: 'var(--border-primary)', margin: '0.25rem 0' }} />
+          <Divider style={{ borderColor: 'var(--border-primary)', margin: '0.25rem 0' }} />
           
           <MenuItem 
             onClick={handleLogout}
-            className="flex items-center space-x-2"
-            sx={{
-              color: '#dc2626',
-              '&:hover': {
-                backgroundColor: 'rgba(220, 38, 38, 0.1)'
-              }
-            }}
+            className="flex items-center space-x-2 text-red-600 hover:bg-red-50"
           >
-            <Logout sx={{ color: '#dc2626' }} />
-            <Typography variant="body2" sx={{ color: '#dc2626' }}>
+            <Logout className="text-red-600" />
+            <Typography variant="body2" className="text-red-600">
               Sign Out
             </Typography>
           </MenuItem>

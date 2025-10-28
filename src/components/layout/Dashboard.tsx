@@ -25,22 +25,22 @@ const Dashboard: React.FC = () => {
   }, [dispatch, employees.length]);
 
   return (
-    <Box className="dashboard-container" sx={{ height: '100vh', overflow: 'hidden' }}>
+    <Box className="dashboard-container h-screen overflow-hidden">
       <Header />
       
-      <Box sx={{ height: 'calc(100vh - 64px)', overflow: 'auto' }} className="custom-scrollbar">
+      <Box className="custom-scrollbar" style={{ height: 'calc(100vh - 64px)', overflow: 'auto' }}>
         <Container maxWidth="xl" className="py-8">
         <Box className="mb-8">
           <Typography 
             variant="h3" 
             component="h1" 
-            style={{ color: 'var(--text-primary)', fontWeight: 'bold', marginBottom: '0.5rem' }}
+            className="text-primary font-bold mb-2"
           >
             Employee Hierarchy
           </Typography>
           <Typography 
             variant="body1" 
-            style={{ color: 'var(--text-secondary)' }}
+            className="text-secondary"
           >
             Explore the organizational structure and find employees across departments
           </Typography>

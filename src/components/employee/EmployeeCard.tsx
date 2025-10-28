@@ -54,13 +54,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
                 <Box className="flex-1 min-w-0">
                   <Typography 
                     variant="h6" 
-                    sx={{ 
-                      fontWeight: 600, 
-                      color: 'var(--text-primary)',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap'
-                    }}
+                    className="font-semibold text-primary overflow-hidden text-ellipsis whitespace-nowrap"
                   >
                     {name}
                   </Typography>

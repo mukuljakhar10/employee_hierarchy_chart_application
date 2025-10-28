@@ -85,7 +85,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       <Box className="flex items-center justify-center py-12">
         <div className="text-center">
           <CircularProgress size={48} className="text-blue-600 mb-4" />
-          <Typography variant="body1" sx={{ color: 'var(--text-secondary)' }}>
+          <Typography variant="body1" className="text-secondary">
             Loading employee hierarchy...
           </Typography>
         </div>
@@ -99,7 +99,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
         <Alert severity="error" className="mb-4">
           {error}
         </Alert>
-        <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
+        <Typography variant="body2" className="text-secondary">
           Please try refreshing the page or contact support if the problem persists.
         </Typography>
       </Box>
@@ -109,10 +109,10 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
   if (employeeTree.length === 0) {
     return (
       <Box className="py-12 text-center">
-        <Typography variant="h6" sx={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+        <Typography variant="h6" className="text-secondary mb-2">
           No employees found
         </Typography>
-        <Typography variant="body2" sx={{ color: 'var(--text-tertiary)' }}>
+        <Typography variant="body2" className="text-tertiary">
           Try adjusting your search filters or check back later.
         </Typography>
       </Box>
@@ -125,10 +125,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       <Box className="flex items-center justify-between mb-6">
         <Typography 
           variant="h5" 
-          sx={{ 
-            fontWeight: 600, 
-            color: 'var(--text-primary)' 
-          }}
+          className="font-semibold text-primary"
         >
           Organizational Chart
         </Typography>
@@ -154,11 +151,8 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       </div>
 
       {/* Tree Statistics */}
-      <Box 
-        className="mt-8 p-4 rounded-lg"
-        sx={{ backgroundColor: 'var(--bg-tertiary)' }}
-      >
-        <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
+      <Box className="mt-8 p-4 rounded-lg bg-tertiary">
+        <Typography variant="body2" className="text-secondary">
           Total Employees: {employeeTree.length > 0 ? 
             employeeTree.reduce((count, node) => {
               const countSubordinates = (node: EmployeeNode): number => {

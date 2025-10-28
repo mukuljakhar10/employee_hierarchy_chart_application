@@ -51,6 +51,59 @@
 
 /* Component styles */
 @layer components {
+  /* Typography utilities */
+  .text-primary {
+    color: var(--text-primary);
+  }
+  
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  
+  .text-tertiary {
+    color: var(--text-tertiary);
+  }
+  
+  .text-white {
+    color: #ffffff;
+  }
+  
+  /* Background utilities */
+  .bg-loading {
+    background-color: var(--bg-primary);
+  }
+  
+  .bg-loading.dark {
+    background-color: #111827;
+  }
+  
+  .bg-tertiary {
+    background-color: var(--bg-tertiary);
+  }
+  
+  /* Spacing utilities */
+  .mb-half {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Hover utilities */
+  .hover\:bg-tertiary:hover {
+    background-color: var(--bg-tertiary);
+  }
+  
+  .hover\:bg-red-50:hover {
+    background-color: rgba(254, 242, 242, 0.5);
+  }
+  
+  /* Font utilities */
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  /* Flex utilities */
+  .flex-grow {
+    flex-grow: 1;
+  }
   /* Custom scrollbar */
   .custom-scrollbar {
     scrollbar-width: thin;
@@ -259,21 +312,6 @@
     max-width: 28rem;
   }
 
-  .no-bg-card {
-    box-shadow: none !important;
-    background-color: transparent !important;
-    border: none !important;
-  }
-
-  .login-input {
-    background-color: #F3F4F6;
-    border: none;
-    border-radius: 8px;
-    color: #374151 !important;
-    width: 100%;
-    margin-top: 1rem !important;
-  }
-
   .login-button {
     background-color: #e91e63;
     color: white;
@@ -342,25 +380,3 @@
   }
 }
 
-/* Utility styles */
-@layer utilities {
-  /* Text truncation */
-  .text-truncate {
-    @apply truncate;
-  }
-  
-  /* Focus visible */
-  .focus-visible {
-    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
-  }
-  
-  /* Smooth transitions */
-  .transition-smooth {
-    @apply transition-all duration-300 ease-in-out;
-  }
-  
-  /* Glass effect */
-  .glass {
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm;
-  }
-}

@@ -7,7 +7,7 @@ import { store } from './store';
 import { useAppSelector, useAppDispatch } from './store';
 import { checkAuthStatus } from './store/slices/authSlice';
 import { ROUTES } from './constants/index.ts';
-import keycloakInstance from './services/keycloakService';
+import keycloakInstance, { initKeycloak } from './services/keycloakService';
 import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/layout/Dashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -96,14 +96,14 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const initializeKeycloak = async () => {
       try {
-        const authenticated = await keycloakInstance.init({
+        const authenticated = await initKeycloak({
           onLoad: 'check-sso',
           silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
         });
 
         if (authenticated && keycloakInstance.tokenParsed) {
           // User is authenticated, dispatch action to update Redux
-          dispatch(checkAuthStatus());
+          await dispatch(checkAuthStatus());
         }
         setKeycloakInitialized(true);
       } catch (error) {
@@ -117,15 +117,7 @@ const AppContent: React.FC = () => {
 
   if (!keycloakInitialized) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-          backgroundColor: theme === 'dark' ? '#111827' : '#f9fafb',
-        }}
-      >
+      <Box className="flex items-center justify-center min-h-screen bg-loading">
         <CircularProgress />
       </Box>
     );
