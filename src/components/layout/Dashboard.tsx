@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
     <Box className="dashboard-container" sx={{ height: '100vh', overflow: 'hidden' }}>
       <Header />
       
-      <Box sx={{ height: 'calc(100vh - 64px)', overflow: 'auto' }}>
+      <Box sx={{ height: 'calc(100vh - 64px)', overflow: 'auto' }} className="custom-scrollbar">
         <Container maxWidth="xl" className="py-8">
         <Box className="mb-8">
           <Typography 

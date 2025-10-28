@@ -1,10 +1,11 @@
 // User types
 export interface User {
-  id: number;
+  id: string | number;
   username: string;
-  password: string;
+  password?: string; // Optional for Keycloak (not used)
   name: string;
   role: string;
+  email?: string; // Optional for Keycloak
 }
 
 export interface AuthState {

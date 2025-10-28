@@ -1,6 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useAppSelector } from '../../store';
 import { ROUTES } from '../../constants/index.ts';
 
 interface ProtectedRouteProps {
@@ -8,7 +8,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAppSelector(state => state.auth);
   const location = useLocation();
 
   // Show loading state while checking authentication

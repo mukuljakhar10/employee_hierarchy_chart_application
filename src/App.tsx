@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, CircularProgress, Box } from '@mui/material';
 import { store } from './store';
 import { useAppSelector, useAppDispatch } from './store';
 import { checkAuthStatus } from './store/slices/authSlice';
 import { ROUTES } from './constants/index.ts';
-import LoginForm from './components/auth/LoginForm';
+import keycloakInstance from './services/keycloakService';
+import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/layout/Dashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import { useAuth } from './hooks/useAuth';
 
 // MUI Theme configuration
 const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
@@ -86,48 +86,50 @@ const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
   },
 });
 
-// Login Page Component
-const LoginPage: React.FC = () => {
-  const { login, isLoading, error, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      const from = (location.state as any)?.from?.pathname || ROUTES.DASHBOARD;
-      navigate(from, { replace: true });
-    }
-  }, [isAuthenticated, navigate, location]);
-
-  const handleLogin = async (username: string, password: string) => {
-    await login(username, password);
-    // Navigation will be handled by the useEffect above
-  };
-
-  // Don't render login form if already authenticated
-  if (isAuthenticated) {
-    return null;
-  }
-
-  return (
-    <LoginForm 
-      onLogin={handleLogin}
-      isLoading={isLoading}
-      error={error}
-    />
-  );
-};
-
 // App Content Component (needs to be inside Provider to use hooks)
 const AppContent: React.FC = () => {
   const { theme } = useAppSelector(state => state.theme);
   const dispatch = useAppDispatch();
+  const [keycloakInitialized, setKeycloakInitialized] = useState(false);
 
-  // Check authentication status only once when app loads
+  // Initialize Keycloak and check authentication status
   useEffect(() => {
-    dispatch(checkAuthStatus());
+    const initializeKeycloak = async () => {
+      try {
+        const authenticated = await keycloakInstance.init({
+          onLoad: 'check-sso',
+          silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+        });
+
+        if (authenticated && keycloakInstance.tokenParsed) {
+          // User is authenticated, dispatch action to update Redux
+          dispatch(checkAuthStatus());
+        }
+        setKeycloakInitialized(true);
+      } catch (error) {
+        console.error('Keycloak initialization failed:', error);
+        setKeycloakInitialized(true);
+      }
+    };
+
+    initializeKeycloak();
   }, [dispatch]);
+
+  if (!keycloakInitialized) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          backgroundColor: theme === 'dark' ? '#111827' : '#f9fafb',
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   const muiTheme = createMuiTheme(theme);
 

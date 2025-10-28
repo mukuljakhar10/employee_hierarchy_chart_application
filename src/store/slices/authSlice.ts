@@ -1,33 +1,31 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import type { User, AuthState } from '../../types/index.ts';
-import { STORAGE_KEYS } from '../../constants/index.ts';
+import keycloakInstance from '../../services/keycloakService';
 
-// Async thunk for login
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (credentials: { username: string; password: string }, { rejectWithValue }) => {
+// Async thunk for checking Keycloak authentication status
+export const checkAuthStatus = createAsyncThunk(
+  'auth/checkAuthStatus',
+  async (_, { rejectWithValue }) => {
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Import users data
-      const usersModule = await import('../../data/users.json');
-      const users: User[] = usersModule.default;
-      
-      const user = users.find(
-        u => u.username === credentials.username && u.password === credentials.password
-      );
-      
-      if (!user) {
-        return rejectWithValue('Invalid username or password');
+      const authenticated = await keycloakInstance.init({
+        onLoad: 'check-sso',
+        silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
+      });
+
+      if (authenticated && keycloakInstance.tokenParsed) {
+        const user: User = {
+          id: keycloakInstance.tokenParsed.sub || '',
+          username: keycloakInstance.tokenParsed.preferred_username || '',
+          name: keycloakInstance.tokenParsed.name || '',
+          email: keycloakInstance.tokenParsed.email || '',
+          role: keycloakInstance.tokenParsed.realm_access?.roles?.[0] || 'Employee',
+          password: '', // Not used with Keycloak
+        };
+        return user;
       }
-      
-      // Store user in localStorage
-      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
-      
-      return user;
+      return null;
     } catch (error) {
-      return rejectWithValue('Login failed. Please try again.');
+      return rejectWithValue('Failed to check authentication status');
     }
   }
 );
@@ -37,27 +35,10 @@ export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
     try {
-      // Remove user from localStorage
-      localStorage.removeItem(STORAGE_KEYS.USER);
+      await keycloakInstance.logout();
       return null;
     } catch (error) {
       return rejectWithValue('Logout failed');
-    }
-  }
-);
-
-// Async thunk for checking existing session
-export const checkAuthStatus = createAsyncThunk(
-  'auth/checkAuthStatus',
-  async (_, { rejectWithValue }) => {
-    try {
-      const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
-      if (storedUser) {
-        return JSON.parse(storedUser) as User;
-      }
-      return null;
-    } catch (error) {
-      return rejectWithValue('Failed to check authentication status');
     }
   }
 );
@@ -82,23 +63,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Login cases
-      .addCase(loginUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-        state.isAuthenticated = true;
-        state.error = null;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-        state.isAuthenticated = false;
-        state.user = null;
-      })
       // Logout cases
       .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;

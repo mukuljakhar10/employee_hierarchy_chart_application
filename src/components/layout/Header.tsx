@@ -16,14 +16,14 @@ import {
   Logout, 
   Person
 } from '@mui/icons-material';
-import { useAuth } from '../../hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { toggleTheme } from '../../store/slices/themeSlice';
 import { logoutUser } from '../../store/slices/authSlice';
+import keycloakInstance from '../../services/keycloakService';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, logout } = useAuth();
+  const { user } = useAppSelector(state => state.auth);
   const { theme } = useAppSelector(state => state.theme);
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -42,7 +42,14 @@ const Header: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
+    try {
+      dispatch(logoutUser());
+      await keycloakInstance.logout({
+        redirectUri: `${window.location.origin}/login`,
+      });
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -77,8 +84,13 @@ const Header: React.FC = () => {
 
           {/* User Menu */}
           <Box 
-            className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg p-2 transition-colors"
+            className="flex items-center space-x-2 cursor-pointer rounded-lg p-2 transition-colors"
             onClick={handleMenuClick}
+            sx={{
+              '&:hover': {
+                backgroundColor: 'var(--bg-tertiary)'
+              }
+            }}
           >
             <Avatar 
               className="bg-blue-600 text-white w-8 h-8 text-sm"
@@ -110,36 +122,50 @@ const Header: React.FC = () => {
           onClose={handleMenuClose}
           className="mt-2"
           PaperProps={{
-            sx: {
-              backgroundColor: 'var(--bg-primary)',
-              border: '1px solid var(--border-primary)',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
-            }
+            className: "user-menu-dropdown"
           }}
         >
           <MenuItem 
             onClick={handleMenuClose}
-            className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="flex items-center space-x-2"
+            sx={{
+              color: 'var(--text-primary)',
+              '&:hover': {
+                backgroundColor: 'var(--bg-tertiary)'
+              }
+            }}
           >
-            <Person className="text-gray-500" />
+            <Person sx={{ color: 'var(--text-tertiary)' }} />
             <Box>
-              <Typography variant="body2" className="font-medium">
+              <Typography 
+                variant="body2" 
+                sx={{ fontWeight: 500, color: 'var(--text-primary)' }}
+              >
                 {user?.name}
               </Typography>
-              <Typography variant="caption" className="text-gray-500">
+              <Typography 
+                variant="caption" 
+                sx={{ color: 'var(--text-secondary)' }}
+              >
                 {user?.username}
               </Typography>
             </Box>
           </MenuItem>
           
-          <Divider className="my-1" />
+          <Divider sx={{ borderColor: 'var(--border-primary)', margin: '0.25rem 0' }} />
           
           <MenuItem 
             onClick={handleLogout}
-            className="flex items-center space-x-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+            className="flex items-center space-x-2"
+            sx={{
+              color: '#dc2626',
+              '&:hover': {
+                backgroundColor: 'rgba(220, 38, 38, 0.1)'
+              }
+            }}
           >
-            <Logout className="text-red-500" />
-            <Typography variant="body2">
+            <Logout sx={{ color: '#dc2626' }} />
+            <Typography variant="body2" sx={{ color: '#dc2626' }}>
               Sign Out
             </Typography>
           </MenuItem>

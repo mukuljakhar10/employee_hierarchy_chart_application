@@ -10,10 +10,6 @@ export const STORAGE_KEYS = {
   USER: 'employee-hierarchy-user',
 } as const;
 
-// Cookie keys
-export const COOKIE_KEYS = {
-  THEME: 'theme-preference',
-} as const;
 
 // Theme options
 export const THEMES = {

@@ -80,8 +80,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, isLoading, error }) => {
 
   return (
     <div className="login-background">
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-40"></div>
       
       <div className="relative z-10 max-w-md w-full">
         {/* Title */}
@@ -97,8 +95,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, isLoading, error }) => {
         </div>
 
         {/* Login Card */}
-        <Card className="login-card">
-          <CardContent className="p-8">
+        <Card className="login-card no-bg-card">
+          <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
                 <Alert severity="error" className="mb-4">

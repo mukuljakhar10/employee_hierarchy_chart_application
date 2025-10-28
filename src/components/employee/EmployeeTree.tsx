@@ -70,7 +70,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
 
         {/* Render subordinates if expanded */}
         {employee.isExpanded && employee.subordinates.length > 0 && (
-          <div className="mt-2 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-4">
+          <div className="tree-connector mt-2">
             {employee.subordinates.map(subordinate => 
               renderEmployeeNode(subordinate)
             )}
@@ -85,7 +85,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       <Box className="flex items-center justify-center py-12">
         <div className="text-center">
           <CircularProgress size={48} className="text-blue-600 mb-4" />
-          <Typography variant="body1" className="text-gray-600 dark:text-gray-400">
+          <Typography variant="body1" sx={{ color: 'var(--text-secondary)' }}>
             Loading employee hierarchy...
           </Typography>
         </div>
@@ -99,7 +99,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
         <Alert severity="error" className="mb-4">
           {error}
         </Alert>
-        <Typography variant="body2" className="text-gray-600 dark:text-gray-400">
+        <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
           Please try refreshing the page or contact support if the problem persists.
         </Typography>
       </Box>
@@ -109,10 +109,10 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
   if (employeeTree.length === 0) {
     return (
       <Box className="py-12 text-center">
-        <Typography variant="h6" className="text-gray-600 dark:text-gray-400 mb-2">
+        <Typography variant="h6" sx={{ color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
           No employees found
         </Typography>
-        <Typography variant="body2" className="text-gray-500 dark:text-gray-500">
+        <Typography variant="body2" sx={{ color: 'var(--text-tertiary)' }}>
           Try adjusting your search filters or check back later.
         </Typography>
       </Box>
@@ -123,7 +123,13 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
     <div ref={treeRef} className="space-y-4">
       {/* Tree Controls */}
       <Box className="flex items-center justify-between mb-6">
-        <Typography variant="h5" className="font-semibold text-gray-900 dark:text-white">
+        <Typography 
+          variant="h5" 
+          sx={{ 
+            fontWeight: 600, 
+            color: 'var(--text-primary)' 
+          }}
+        >
           Organizational Chart
         </Typography>
         
@@ -143,14 +149,16 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
         </Box>
       </Box>
 
-      {/* Employee Tree */}
       <div className="space-y-4">
         {employeeTree.map(employee => renderEmployeeNode(employee))}
       </div>
 
       {/* Tree Statistics */}
-      <Box className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <Typography variant="body2" className="text-gray-600 dark:text-gray-400">
+      <Box 
+        className="mt-8 p-4 rounded-lg"
+        sx={{ backgroundColor: 'var(--bg-tertiary)' }}
+      >
+        <Typography variant="body2" sx={{ color: 'var(--text-secondary)' }}>
           Total Employees: {employeeTree.length > 0 ? 
             employeeTree.reduce((count, node) => {
               const countSubordinates = (node: EmployeeNode): number => {

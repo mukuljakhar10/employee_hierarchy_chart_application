@@ -54,37 +54,69 @@
   /* Custom scrollbar */
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgb(156 163 175) transparent;
+    scrollbar-color: var(--border-secondary) var(--bg-secondary);
   }
   
   .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 12px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--bg-secondary);
+    border-radius: 6px;
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgb(156 163 175);
-    border-radius: 3px;
+    background-color: var(--border-secondary);
+    border-radius: 6px;
+    border: 2px solid var(--bg-secondary);
   }
   
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(107 114 128);
+    background-color: var(--text-tertiary);
   }
   
-  /* Dark mode scrollbar */
-  .dark .custom-scrollbar {
-    scrollbar-color: rgb(75 85 99) transparent;
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: block;
+    height: 12px;
+    background-color: var(--border-secondary);
+    border-radius: 6px;
   }
   
-  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgb(75 85 99);
+  .custom-scrollbar::-webkit-scrollbar-button:hover {
+    background-color: var(--text-tertiary);
   }
   
-  .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(107 114 128);
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px;
+  }
+
+  /* Dark mode scrollbar arrows */
+  .dark .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+  }
+  
+  .dark .custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  }
+
+  /* Light mode scrollbar arrows */
+  :root .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23374151' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
+  }
+  
+  :root .custom-scrollbar::-webkit-scrollbar-button:vertical:end:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23374151' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   }
   
   /* Employee card styles */
@@ -221,21 +253,25 @@
   }
 
   .login-card {
-    background-color: var(--bg-tertiary);
-    border: 2px solid var(--border-secondary);
     border-radius: 12px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    padding: 2rem;
     width: 100%;
     max-width: 28rem;
+  }
+
+  .no-bg-card {
+    box-shadow: none !important;
+    background-color: transparent !important;
+    border: none !important;
   }
 
   .login-input {
     background-color: #F3F4F6;
     border: none;
     border-radius: 8px;
-    color: #374151;
+    color: #374151 !important;
     width: 100%;
+    margin-top: 1rem !important;
   }
 
   .login-button {
@@ -247,7 +283,7 @@
     letter-spacing: 0.05em;
     border-radius: 25px;
     padding: 12px 0;
-    margin-top: 1rem;
+    margin-top: 1rem !important;
     width: 100%;
     border: none;
     cursor: pointer;
@@ -288,6 +324,21 @@
     border: 1px solid var(--border-primary);
     padding: 1rem;
     margin-bottom: 1.5rem;
+  }
+
+  /* Menu Dropdown Styles */
+  .user-menu-dropdown {
+    background-color: var(--bg-primary) !important;
+    border: 1px solid var(--border-primary) !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .user-menu-dropdown .MuiMenuItem-root {
+    color: var(--text-primary) !important;
+  }
+
+  .user-menu-dropdown .MuiMenuItem-root:hover {
+    background-color: var(--bg-tertiary) !important;
   }
 }
 
