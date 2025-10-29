@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, CircularProgress, Box } from '@mui/material';
 import { store } from './store';
-import { useAppSelector, useAppDispatch } from './store';
-import { checkAuthStatus } from './store/slices/authSlice';
+import { useAppSelector } from './store';
 import { ROUTES } from './constants/index.ts';
-import keycloakInstance, { initKeycloak } from './services/keycloakService';
 import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/layout/Dashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import { useKeycloakAuth } from './hooks/useKeycloakAuth';
 
 // MUI Theme configuration
 const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
@@ -37,24 +36,12 @@ const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
   },
   typography: {
     fontFamily: 'Inter, system-ui, sans-serif',
-    h1: {
-      fontWeight: 700,
-    },
-    h2: {
-      fontWeight: 600,
-    },
-    h3: {
-      fontWeight: 600,
-    },
-    h4: {
-      fontWeight: 600,
-    },
-    h5: {
-      fontWeight: 600,
-    },
-    h6: {
-      fontWeight: 600,
-    },
+    h1: { fontWeight: 700 },
+    h2: { fontWeight: 600 },
+    h3: { fontWeight: 600 },
+    h4: { fontWeight: 600 },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
   },
   components: {
     MuiButton: {
@@ -89,33 +76,9 @@ const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
 // App Content Component (needs to be inside Provider to use hooks)
 const AppContent: React.FC = () => {
   const { theme } = useAppSelector(state => state.theme);
-  const dispatch = useAppDispatch();
-  const [keycloakInitialized, setKeycloakInitialized] = useState(false);
+  const { isLoading } = useKeycloakAuth();
 
-  // Initialize Keycloak and check authentication status
-  useEffect(() => {
-    const initializeKeycloak = async () => {
-      try {
-        const authenticated = await initKeycloak({
-          onLoad: 'check-sso',
-          silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
-        });
-
-        if (authenticated && keycloakInstance.tokenParsed) {
-          // User is authenticated, dispatch action to update Redux
-          await dispatch(checkAuthStatus());
-        }
-        setKeycloakInitialized(true);
-      } catch (error) {
-        console.error('Keycloak initialization failed:', error);
-        setKeycloakInitialized(true);
-      }
-    };
-
-    initializeKeycloak();
-  }, [dispatch]);
-
-  if (!keycloakInitialized) {
+  if (isLoading) {
     return (
       <Box className="flex items-center justify-center min-h-screen bg-loading">
         <CircularProgress />

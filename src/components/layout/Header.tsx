@@ -18,13 +18,13 @@ import {
 } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { toggleTheme } from '../../store/slices/themeSlice';
-import { logoutUser } from '../../store/slices/authSlice';
-import keycloakInstance, { resetKeycloak } from '../../services/keycloakService';
+import { useKeycloakAuth } from '../../hooks/useKeycloakAuth';
 
 const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth);
   const { theme } = useAppSelector(state => state.theme);
+  const { logout } = useKeycloakAuth();
   
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -43,11 +43,7 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await keycloakInstance.logout({
-        redirectUri: `${window.location.origin}/login`,
-      });
-      resetKeycloak();
-      dispatch(logoutUser());
+      await logout();
     } catch (error) {
       console.error('Logout failed:', error);
     }

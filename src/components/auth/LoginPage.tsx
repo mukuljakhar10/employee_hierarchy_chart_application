@@ -1,16 +1,15 @@
 import React from 'react';
 import { Box, Typography, Button, CircularProgress } from '@mui/material';
-import keycloakInstance from '../../services/keycloakService';
+import { useKeycloakAuth } from '../../hooks/useKeycloakAuth';
 
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const { login } = useKeycloakAuth();
 
   const handleKeycloakLogin = async () => {
     setIsLoading(true);
     try {
-      await keycloakInstance.login({
-        redirectUri: `${window.location.origin}/dashboard`,
-      });
+      login();
     } catch (error) {
       console.error('Login failed:', error);
       setIsLoading(false);

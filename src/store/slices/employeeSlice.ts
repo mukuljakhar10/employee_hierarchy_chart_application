@@ -15,6 +15,7 @@ export const fetchEmployees = createAsyncThunk(
       
       return employees;
     } catch (error) {
+      console.error('Failed to fetch employees:', error);
       return rejectWithValue('Failed to fetch employees');
     }
   }
