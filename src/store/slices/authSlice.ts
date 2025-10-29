@@ -2,12 +2,10 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import type { User, AuthState } from '../../types/index.ts';
 import keycloakInstance, { resetKeycloak } from '../../services/keycloakService';
 
-// Async thunk for checking Keycloak authentication status
 export const checkAuthStatus = createAsyncThunk(
   'auth/checkAuthStatus',
   async (_, { rejectWithValue }) => {
     try {
-      // Check if user is authenticated (don't initialize again)
       if (keycloakInstance.authenticated && keycloakInstance.tokenParsed) {
         const user: User = {
           id: keycloakInstance.tokenParsed.sub || '',
@@ -15,7 +13,7 @@ export const checkAuthStatus = createAsyncThunk(
           name: keycloakInstance.tokenParsed.name || '',
           email: keycloakInstance.tokenParsed.email || '',
           role: keycloakInstance.tokenParsed.realm_access?.roles?.[0] || 'Employee',
-          password: '', // Not used with Keycloak
+          password: '',
         };
         return user;
       }
@@ -27,7 +25,6 @@ export const checkAuthStatus = createAsyncThunk(
   }
 );
 
-// Async thunk for logout
 export const logoutUser = createAsyncThunk(
   'auth/logoutUser',
   async (_, { rejectWithValue }) => {
@@ -61,7 +58,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Logout cases
       .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -75,7 +71,6 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-      // Check auth status cases
       .addCase(checkAuthStatus.pending, (state) => {
         state.isLoading = true;
       })

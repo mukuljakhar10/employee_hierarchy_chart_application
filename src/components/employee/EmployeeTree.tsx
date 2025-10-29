@@ -28,7 +28,6 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
     dispatch(fetchEmployees());
   }, [dispatch]);
 
-  // Scroll to highlighted node when search query changes
   useEffect(() => {
     if (searchQuery && highlightedNodeRef.current) {
       highlightedNodeRef.current.scrollIntoView({
@@ -64,7 +63,6 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
           />
         </div>
 
-        {/* Render subordinates if expanded */}
         {employee.isExpanded && employee.subordinates.length > 0 && (
           <div className="tree-connector mt-1 sm:mt-2">
             {employee.subordinates.map(subordinate => 
@@ -117,7 +115,6 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
 
   return (
     <div ref={treeRef} className="space-y-4">
-      {/* Tree Controls */}
       <Box className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <Typography 
           variant="h5" 
@@ -148,7 +145,6 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
         {employeeTree.map(employee => renderEmployeeNode(employee))}
       </div>
 
-      {/* Tree Statistics */}
       <Box className="mt-4 sm:mt-6 md:mt-8 p-3 sm:p-4 rounded-lg bg-tertiary">
         <Typography variant="body2" className="text-secondary text-xs sm:text-sm">
           <span className="block sm:inline">Total Employees: {employeeTree.length > 0 ? 

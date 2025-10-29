@@ -5,8 +5,6 @@
 </head>
 <body>
     <script>
-        // This page is used by Keycloak for silent SSO checks
-        // It will be loaded in a hidden iframe to check if the user is already logged in
         parent.postMessage(location.hash, location.origin);
     </script>
 </body>

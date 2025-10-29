@@ -29,7 +29,6 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
     };
 
     const getLevelIndentation = () => {
-      // Responsive indentation: 24px per level on desktop, handled by CSS on mobile
       return level * 24;
     };
 
@@ -51,7 +50,6 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
           <CardContent className="p-3 sm:p-4">
             <Box className="flex items-center justify-between gap-2">
               <Box className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
-                {/* Employee Info */}
                 <Box className="flex-1 min-w-0">
                   <Typography 
                     variant="h6" 
@@ -88,7 +86,6 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
                 </Box>
               </Box>
 
-              {/* Expand/Collapse Button */}
               {hasSubordinates && (
                 <IconButton
                   onClick={handleToggleExpand}
@@ -103,7 +100,6 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
               )}
             </Box>
 
-            {/* Subordinates Count */}
             {hasSubordinates && (
               <Box className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
                 <Typography 

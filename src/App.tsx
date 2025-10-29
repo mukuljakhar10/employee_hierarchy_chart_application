@@ -12,7 +12,6 @@ import Dashboard from './components/layout/Dashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { initializeKeycloak } from './hooks/useKeycloakAuth';
 
-// MUI Theme configuration
 const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
   palette: {
     mode,
@@ -74,14 +73,12 @@ const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
   },
 });
 
-// App Content Component (needs to be inside Provider to use hooks)
 const AppContent: React.FC = () => {
   const { theme } = useAppSelector(state => state.theme);
   const { isLoading } = useAppSelector(state => state.auth);
   const dispatch = useAppDispatch();
   const [keycloakInitialized, setKeycloakInitialized] = useState(false);
 
-  // Initialize Keycloak once when app starts
   useEffect(() => {
     let mounted = true;
     const init = async () => {
@@ -96,7 +93,6 @@ const AppContent: React.FC = () => {
     };
   }, [dispatch]);
 
-  // Show loading while Keycloak initializes or auth is loading
   if (!keycloakInitialized || isLoading) {
     return (
       <Box className="flex items-center justify-center min-h-screen bg-loading">
@@ -114,13 +110,10 @@ const AppContent: React.FC = () => {
         theme === 'dark' ? 'dark' : ''
       }`}>
         <Routes>
-          {/* Login Route */}
           <Route 
             path={ROUTES.LOGIN} 
             element={<LoginPage />} 
           />
-          
-          {/* Protected Dashboard Route */}
           <Route 
             path={ROUTES.DASHBOARD} 
             element={
@@ -129,14 +122,10 @@ const AppContent: React.FC = () => {
               </ProtectedRoute>
             } 
           />
-          
-          {/* Default Route - Redirect to Dashboard */}
           <Route 
             path={ROUTES.HOME} 
             element={<Navigate to={ROUTES.DASHBOARD} replace />} 
           />
-          
-          {/* Catch all route - Redirect to Dashboard */}
           <Route 
             path="*" 
             element={<Navigate to={ROUTES.DASHBOARD} replace />} 
@@ -147,7 +136,6 @@ const AppContent: React.FC = () => {
   );
 };
 
-// Main App Component
 const App: React.FC = () => {
   return (
     <Provider store={store}>

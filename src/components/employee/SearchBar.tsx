@@ -19,7 +19,6 @@ const SearchBar: React.FC = () => {
   const [localSearchQuery, setLocalSearchQuery] = useState('');
   const [hasExpanded, setHasExpanded] = useState(false);
 
-  // Create debounced search function
   const debouncedSearchRef = useRef(
     debounce((name: string) => {
       const filters: SearchFilters = {
@@ -28,14 +27,12 @@ const SearchBar: React.FC = () => {
         department: '',
       };
       dispatch(setSearchFilters(filters));
-      // If searching by name, also expand to show the employee
       if (name) {
         dispatch(searchAndExpandToEmployee(name));
       }
     }, 300)
   );
 
-  // Update debounced function when dispatch changes
   useEffect(() => {
     debouncedSearchRef.current = debounce((name: string) => {
       const filters: SearchFilters = {
@@ -50,18 +47,15 @@ const SearchBar: React.FC = () => {
     }, 300);
   }, [dispatch]);
 
-  // Handle search input change
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setLocalSearchQuery(value);
     
-    // Expand all nodes when user starts typing (only once per search session)
     if (value && !hasExpanded) {
       dispatch(expandAllNodes());
       setHasExpanded(true);
     }
     
-    // Reset expanded flag when search is cleared
     if (!value && hasExpanded) {
       setHasExpanded(false);
     }
@@ -69,7 +63,6 @@ const SearchBar: React.FC = () => {
     debouncedSearchRef.current(value);
   };
 
-  // Clear search
   const handleClear = () => {
     setLocalSearchQuery('');
     setHasExpanded(false);

@@ -12,7 +12,6 @@ const Dashboard: React.FC = () => {
     state => state.employees
   );
 
-  // Fetch employees on component mount
   useEffect(() => {
     if (employees.length === 0) {
       dispatch(fetchEmployees());
@@ -41,10 +40,8 @@ const Dashboard: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Search Bar */}
         <SearchBar />
 
-        {/* Employee Tree */}
         <Box className="dashboard-content">
           <EmployeeTree searchQuery={searchQuery} />
         </Box>

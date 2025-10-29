@@ -1,12 +1,7 @@
-import { useAppDispatch, useAppSelector } from '../store';
+import { useAppDispatch, useAppSelector, type AppDispatch } from '../store';
 import keycloakInstance, { resetKeycloak } from '../services/keycloakService';
-import { logoutUser } from '../store/slices/authSlice';
+import { logoutUser, checkAuthStatus as checkAuthStatusThunk } from '../store/slices/authSlice';
 
-/**
- * Custom hook for Keycloak authentication
- * Note: Initialization should happen once in App.tsx using initializeKeycloak
- * This hook only provides login/logout functions and reads auth state from Redux
- */
 export const useKeycloakAuth = () => {
   const dispatch = useAppDispatch();
   const { user, isAuthenticated, isLoading } = useAppSelector(state => state.auth);
@@ -26,7 +21,6 @@ export const useKeycloakAuth = () => {
       dispatch(logoutUser());
     } catch (error) {
       console.error('Logout failed:', error);
-      // Even if logout fails, clear local state
       resetKeycloak();
       dispatch(logoutUser());
     }
@@ -41,13 +35,9 @@ export const useKeycloakAuth = () => {
   };
 };
 
-/**
- * Initialize Keycloak once when app starts
- * Should be called only once in App.tsx
- */
 export const initializeKeycloak = async (
-  dispatch: any,
-  checkAuthStatus: any
+  dispatch: AppDispatch,
+  checkAuthStatus: typeof checkAuthStatusThunk
 ): Promise<boolean> => {
   try {
     const { initKeycloak } = await import('../services/keycloakService');
@@ -56,16 +46,12 @@ export const initializeKeycloak = async (
       silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`,
       pkceMethod: 'S256',
     });
-
-    // Check auth status after initialization (handles redirect callback)
     if (authenticated) {
       await dispatch(checkAuthStatus());
     }
     return true;
   } catch (error) {
     console.error('Keycloak initialization failed:', error);
-    // Even if initialization fails, we should still allow app to render
-    // User can retry login
     return false;
   }
 };

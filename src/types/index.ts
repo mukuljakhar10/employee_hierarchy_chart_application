@@ -1,11 +1,10 @@
-// User types
 export interface User {
   id: string | number;
   username: string;
-  password?: string; // Optional for Keycloak (not used)
+  password?: string;
   name: string;
   role: string;
-  email?: string; // Optional for Keycloak
+  email?: string;
 }
 
 export interface AuthState {
@@ -15,7 +14,6 @@ export interface AuthState {
   error: string | null;
 }
 
-// Employee types
 export interface Employee {
   id: number;
   name: string;
@@ -41,30 +39,19 @@ export interface EmployeeState {
   expandedNodes: number[];
 }
 
-// Theme types
 export type Theme = 'light' | 'dark';
 
 export interface ThemeState {
   theme: Theme;
 }
 
-// Search filters
 export interface SearchFilters {
   name: string;
   role: string;
   department: string;
 }
-
-// Root state will be inferred from store
-
-// Component props
 export interface EmployeeCardProps {
   employee: EmployeeNode;
   onToggleExpand: (id: number) => void;
   isHighlighted?: boolean;
-}
-
-export interface SearchBarProps {
-  roles: string[];
-  departments: string[];
 }

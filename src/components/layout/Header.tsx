@@ -43,7 +43,6 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      // Clear theme from storage on logout
       dispatch(clearTheme());
       await logout();
     } catch (error) {
@@ -73,7 +72,6 @@ const Header: React.FC = () => {
         </Typography>
 
         <Box className="flex items-center space-x-2 sm:space-x-4">
-          {/* Theme Toggle */}
           <IconButton
             onClick={handleThemeToggle}
             className="text-secondary"
@@ -86,7 +84,6 @@ const Header: React.FC = () => {
             {theme === 'light' ? <Brightness4 /> : <Brightness7 />}
           </IconButton>
 
-          {/* User Menu */}
           <Box 
             className="flex items-center space-x-1 sm:space-x-2 cursor-pointer rounded-lg p-1 sm:p-2 transition-colors hover:bg-tertiary"
             onClick={handleMenuClick}
@@ -114,7 +111,6 @@ const Header: React.FC = () => {
           </Box>
         </Box>
 
-        {/* User Menu Dropdown */}
         <Menu
           anchorEl={anchorEl}
           open={open}

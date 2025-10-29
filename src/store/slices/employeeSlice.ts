@@ -1,15 +1,12 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import type { Employee, EmployeeNode, EmployeeState, SearchFilters } from '../../types/index.ts';
 
-// Async thunk for fetching employees
 export const fetchEmployees = createAsyncThunk(
   'employees/fetchEmployees',
   async (_, { rejectWithValue }) => {
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Import employees data
       const employeesModule = await import('../../data/employees.json');
       const employees: Employee[] = employeesModule.default;
       
@@ -21,12 +18,10 @@ export const fetchEmployees = createAsyncThunk(
   }
 );
 
-// Helper function to build employee tree
 const buildEmployeeTree = (employees: Employee[], expandedNodes: number[] = []): EmployeeNode[] => {
   const employeeMap = new Map<number, EmployeeNode>();
   const rootEmployees: EmployeeNode[] = [];
 
-  // Create employee nodes
   employees.forEach(employee => {
     employeeMap.set(employee.id, {
       ...employee,
@@ -36,15 +31,12 @@ const buildEmployeeTree = (employees: Employee[], expandedNodes: number[] = []):
     });
   });
 
-  // Build hierarchy
   employees.forEach(employee => {
     const employeeNode = employeeMap.get(employee.id)!;
     
     if (employee.managerId === null) {
-      // This is a root employee (CEO)
       rootEmployees.push(employeeNode);
     } else {
-      // This employee has a manager
       const manager = employeeMap.get(employee.managerId);
       if (manager) {
         manager.subordinates.push(employeeNode);
@@ -56,7 +48,6 @@ const buildEmployeeTree = (employees: Employee[], expandedNodes: number[] = []):
   return rootEmployees;
 };
 
-// Helper function to filter employees
 const filterEmployees = (employees: Employee[], filters: SearchFilters): Employee[] => {
   return employees.filter(employee => {
     const nameMatch = !filters.name || 
@@ -88,14 +79,11 @@ const employeeSlice = createSlice({
       state.selectedRole = action.payload.role;
       state.selectedDepartment = action.payload.department;
       
-      // Rebuild tree with filtered employees
       const filteredEmployees = filterEmployees(state.employees, action.payload);
       state.employeeTree = buildEmployeeTree(filteredEmployees, state.expandedNodes);
     },
     toggleNodeExpansion: (state, action: PayloadAction<number>) => {
       const nodeId = action.payload;
-      
-      // Toggle expansion state
       const toggleExpansion = (nodes: EmployeeNode[]): void => {
         nodes.forEach(node => {
           if (node.id === nodeId) {
@@ -152,19 +140,16 @@ const employeeSlice = createSlice({
       const searchQuery = action.payload.toLowerCase();
       if (!searchQuery) return;
 
-      // Find all employees that match the search
       const findMatchingEmployees = (nodes: EmployeeNode[], path: number[] = []): number[][] => {
         let matches: number[][] = [];
         
         nodes.forEach(node => {
           const currentPath = [...path, node.id];
           
-          // Check if this employee matches
           if (node.name.toLowerCase().includes(searchQuery)) {
             matches.push(currentPath);
           }
           
-          // Recursively search subordinates
           if (node.subordinates.length > 0) {
             const childMatches = findMatchingEmployees(node.subordinates, currentPath);
             matches = matches.concat(childMatches);
@@ -176,9 +161,7 @@ const employeeSlice = createSlice({
 
       const matchingPaths = findMatchingEmployees(state.employeeTree);
       
-      // Expand all parent nodes for each match
       matchingPaths.forEach(path => {
-        // Expand all nodes in the path except the last one (the employee itself)
         path.slice(0, -1).forEach(nodeId => {
           if (!state.expandedNodes.includes(nodeId)) {
             state.expandedNodes.push(nodeId);
@@ -186,7 +169,6 @@ const employeeSlice = createSlice({
         });
       });
 
-      // Rebuild tree with updated expansion state
       state.employeeTree = buildEmployeeTree(state.employees, state.expandedNodes);
     },
   },
