@@ -7,14 +7,10 @@ import type { EmployeeNode } from '../../types';
 
 interface EmployeeTreeProps {
   searchQuery: string;
-  selectedRole: string;
-  selectedDepartment: string;
 }
 
 const EmployeeTree: React.FC<EmployeeTreeProps> = ({ 
-  searchQuery, 
-  selectedRole, 
-  selectedDepartment 
+  searchQuery
 }) => {
   const dispatch = useAppDispatch();
   const { 
@@ -59,7 +55,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       employee.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
-      <div key={employee.id} className="mb-4">
+      <div key={employee.id} className="mb-2 sm:mb-4">
         <div ref={isHighlighted ? highlightedNodeRef : null}>
           <EmployeeCard
             employee={employee}
@@ -70,7 +66,7 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
 
         {/* Render subordinates if expanded */}
         {employee.isExpanded && employee.subordinates.length > 0 && (
-          <div className="tree-connector mt-2">
+          <div className="tree-connector mt-1 sm:mt-2">
             {employee.subordinates.map(subordinate => 
               renderEmployeeNode(subordinate)
             )}
@@ -122,24 +118,26 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
   return (
     <div ref={treeRef} className="space-y-4">
       {/* Tree Controls */}
-      <Box className="flex items-center justify-between mb-6">
+      <Box className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
         <Typography 
           variant="h5" 
-          className="font-semibold text-primary"
+          className="font-semibold text-primary text-lg sm:text-xl md:text-2xl"
         >
           Organizational Chart
         </Typography>
         
-        <Box className="flex items-center space-x-2">
+        <Box className="flex items-center space-x-2 w-full sm:w-auto">
           <button
             onClick={handleExpandAll}
-            className="btn-outline text-sm py-1 px-3"
+            className="btn-outline text-xs sm:text-sm py-2 px-2 sm:px-3 flex-1 sm:flex-none touch-manipulation"
+            style={{ minHeight: '44px' }}
           >
             Expand All
           </button>
           <button
             onClick={handleCollapseAll}
-            className="btn-outline text-sm py-1 px-3"
+            className="btn-outline text-xs sm:text-sm py-2 px-2 sm:px-3 flex-1 sm:flex-none touch-manipulation"
+            style={{ minHeight: '44px' }}
           >
             Collapse All
           </button>
@@ -151,17 +149,18 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
       </div>
 
       {/* Tree Statistics */}
-      <Box className="mt-8 p-4 rounded-lg bg-tertiary">
-        <Typography variant="body2" className="text-secondary">
-          Total Employees: {employeeTree.length > 0 ? 
+      <Box className="mt-4 sm:mt-6 md:mt-8 p-3 sm:p-4 rounded-lg bg-tertiary">
+        <Typography variant="body2" className="text-secondary text-xs sm:text-sm">
+          <span className="block sm:inline">Total Employees: {employeeTree.length > 0 ? 
             employeeTree.reduce((count, node) => {
               const countSubordinates = (node: EmployeeNode): number => {
                 return 1 + node.subordinates.reduce((sum, sub) => sum + countSubordinates(sub), 0);
               };
               return count + countSubordinates(node);
             }, 0) : 0
-          } | 
-          Expanded Nodes: {expandedNodes.length}
+          }</span>
+          <span className="hidden sm:inline"> | </span>
+          <span className="block sm:inline mt-1 sm:mt-0">Expanded Nodes: {expandedNodes.length}</span>
         </Typography>
       </Box>
     </div>

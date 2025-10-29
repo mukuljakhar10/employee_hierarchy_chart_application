@@ -19,11 +19,11 @@ const LoginPage: React.FC = () => {
   return (
     <Box className="login-background">
       <Box className="login-card">
-        <Box className="mb-6">
+        <Box className="mb-4 sm:mb-6">
           <Typography 
             variant="h4" 
             component="h1"
-            className="font-bold text-center mb-2 text-white"
+            className="font-bold text-center mb-2 text-white text-2xl sm:text-3xl md:text-4xl"
           >
             Employee Hierarchy Chart
           </Typography>
@@ -35,7 +35,12 @@ const LoginPage: React.FC = () => {
           size="large"
           onClick={handleKeycloakLogin}
           disabled={isLoading}
-          className="login-button mt-4"
+          className="login-button mt-4 touch-manipulation"
+          sx={{
+            padding: { xs: '12px 24px', sm: '14px 28px' },
+            fontSize: { xs: '14px', sm: '16px' },
+            minHeight: '44px',
+          }}
         >
           {isLoading ? (
             <>

@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, CircularProgress, Box } from '@mui/material';
 import { store } from './store';
-import { useAppSelector } from './store';
+import { useAppSelector, useAppDispatch } from './store';
+import { checkAuthStatus } from './store/slices/authSlice';
 import { ROUTES } from './constants/index.ts';
 import LoginPage from './components/auth/LoginPage';
 import Dashboard from './components/layout/Dashboard';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import { useKeycloakAuth } from './hooks/useKeycloakAuth';
+import { initializeKeycloak } from './hooks/useKeycloakAuth';
 
 // MUI Theme configuration
 const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
@@ -76,9 +77,27 @@ const createMuiTheme = (mode: 'light' | 'dark') => createTheme({
 // App Content Component (needs to be inside Provider to use hooks)
 const AppContent: React.FC = () => {
   const { theme } = useAppSelector(state => state.theme);
-  const { isLoading } = useKeycloakAuth();
+  const { isLoading } = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+  const [keycloakInitialized, setKeycloakInitialized] = useState(false);
 
-  if (isLoading) {
+  // Initialize Keycloak once when app starts
+  useEffect(() => {
+    let mounted = true;
+    const init = async () => {
+      await initializeKeycloak(dispatch, checkAuthStatus);
+      if (mounted) {
+        setKeycloakInitialized(true);
+      }
+    };
+    init();
+    return () => {
+      mounted = false;
+    };
+  }, [dispatch]);
+
+  // Show loading while Keycloak initializes or auth is loading
+  if (!keycloakInitialized || isLoading) {
     return (
       <Box className="flex items-center justify-center min-h-screen bg-loading">
         <CircularProgress />

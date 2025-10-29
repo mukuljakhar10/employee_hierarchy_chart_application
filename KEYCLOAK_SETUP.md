@@ -10,14 +10,93 @@ This application now uses Keycloak for secure authentication. All user credentia
 
 ## Step 1: Start Keycloak Server
 
-### Option A: Using Docker (Recommended)
+### Option A: Using Docker (Recommended - Persists Data)
+
+**Initial Setup (First Time Only):**
 ```bash
 docker run -d \
+  --name keycloak-employee-app \
   -p 8080:8080 \
   -e KEYCLOAK_ADMIN=admin \
   -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  -v keycloak_data:/opt/keycloak/data \
   quay.io/keycloak/keycloak:latest \
   start-dev
+```
+
+**After Initial Setup (Subsequent Restarts):**
+Once the container is created, you can simply stop and start it:
+```bash
+# Stop the container
+docker stop keycloak-employee-app
+
+# Start the container again (all your data will be preserved)
+docker start keycloak-employee-app
+```
+
+**Check if container exists:**
+```bash
+# List all containers (including stopped ones)
+docker ps -a | grep keycloak
+
+# If container exists, just start it:
+docker start keycloak-employee-app
+
+# If container doesn't exist, run the initial setup command above
+```
+
+**Alternative: Using Docker Volume (Explicit Path)**
+If you prefer a named volume in a specific location:
+```bash
+docker run -d \
+  --name keycloak-employee-app \
+  -p 8080:8080 \
+  -e KEYCLOAK_ADMIN=admin \
+  -e KEYCLOAK_ADMIN_PASSWORD=admin \
+  -v $(pwd)/keycloak-data:/opt/keycloak/data \
+  quay.io/keycloak/keycloak:latest \
+  start-dev
+```
+
+### Option A1: Using Docker Compose (Even Easier - Recommended)
+Create a `docker-compose.yml` file in your project root:
+```yaml
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak-employee-app
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    command: start-dev
+    restart: unless-stopped
+
+volumes:
+  keycloak_data:
+```
+
+Then use these simple commands:
+```bash
+# Start Keycloak
+docker-compose up -d
+
+# Stop Keycloak (data preserved)
+docker-compose stop
+
+# Start Keycloak again
+docker-compose start
+
+# Stop and remove containers (data preserved in volume)
+docker-compose down
+
+# Start fresh
+docker-compose up -d
 ```
 
 ### Option B: Download and Run Locally
@@ -169,6 +248,37 @@ Application will be available at: `http://localhost:5173`
 - Ensure `public/silent-check-sso.html` exists
 - Check browser console for CORS errors
 - Verify Keycloak CORS settings
+
+### Issue: "Lost Keycloak data after container restart"
+If you already created a container without a volume, here's how to migrate:
+
+**Option 1: Start existing container (if it still exists)**
+```bash
+# Find your existing container
+docker ps -a | grep keycloak
+
+# Start it (replace CONTAINER_ID with actual ID)
+docker start <CONTAINER_ID>
+
+# Copy container name if needed
+docker start keycloak-employee-app
+```
+
+**Option 2: Create new container with volume (recommended)**
+1. Stop and remove old container (if exists):
+   ```bash
+   docker stop <CONTAINER_ID>
+   docker rm <CONTAINER_ID>
+   ```
+2. Run new container with volume (from Step 1 above)
+3. Reconfigure realms, users, and roles (one-time setup)
+
+**Option 3: Export/Import configuration**
+If you have many realms to migrate, you can:
+1. Use Keycloak's export feature before stopping container
+2. Import after starting new container with volume
+
+**Prevention:** Always use `--name` flag and volume (`-v`) when creating containers
 
 ## Production Deployment
 

@@ -1,7 +1,7 @@
-// API endpoints
-export const API_ENDPOINTS = {
-  EMPLOYEES: '/api/employees',
-  USERS: '/api/users',
+// Theme options
+export const THEMES = {
+  LIGHT: 'light',
+  DARK: 'dark',
 } as const;
 
 // Local storage keys
@@ -10,27 +10,11 @@ export const STORAGE_KEYS = {
   USER: 'employee-hierarchy-user',
 } as const;
 
-
-// Theme options
-export const THEMES = {
-  LIGHT: 'light',
-  DARK: 'dark',
-} as const;
-
 // Routes
 export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/dashboard',
   HOME: '/',
-} as const;
-
-// Breakpoints for responsive design
-export const BREAKPOINTS = {
-  SM: '640px',
-  MD: '768px',
-  LG: '1024px',
-  XL: '1280px',
-  '2XL': '1536px',
 } as const;
 
 // Animation durations

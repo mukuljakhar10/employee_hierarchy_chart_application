@@ -17,7 +17,7 @@ import {
   Person
 } from '@mui/icons-material';
 import { useAppDispatch, useAppSelector } from '../../store';
-import { toggleTheme } from '../../store/slices/themeSlice';
+import { toggleTheme, clearTheme } from '../../store/slices/themeSlice';
 import { useKeycloakAuth } from '../../hooks/useKeycloakAuth';
 
 const Header: React.FC = () => {
@@ -43,6 +43,8 @@ const Header: React.FC = () => {
 
   const handleLogout = async () => {
     try {
+      // Clear theme from storage on logout
+      dispatch(clearTheme());
       await logout();
     } catch (error) {
       console.error('Logout failed:', error);
@@ -60,32 +62,37 @@ const Header: React.FC = () => {
         zIndex: 1100
       }}
     >
-      <Toolbar className="px-4 sm:px-6">
+      <Toolbar className="px-2 sm:px-4 md:px-6">
         <Typography 
           variant="h6" 
           component="div" 
-          className="flex-grow text-primary"
+          className="flex-grow text-primary text-sm sm:text-base md:text-lg truncate"
         >
-          Employee Hierarchy Chart
+          <span className="hidden sm:inline">Employee Hierarchy Chart</span>
+          <span className="sm:hidden">EHC</span>
         </Typography>
 
-        <Box className="flex items-center space-x-4">
+        <Box className="flex items-center space-x-2 sm:space-x-4">
           {/* Theme Toggle */}
           <IconButton
             onClick={handleThemeToggle}
             className="text-secondary"
             aria-label="toggle theme"
+            size="small"
+            sx={{ 
+              padding: { xs: '8px', sm: '12px' },
+            }}
           >
             {theme === 'light' ? <Brightness4 /> : <Brightness7 />}
           </IconButton>
 
           {/* User Menu */}
           <Box 
-            className="flex items-center space-x-2 cursor-pointer rounded-lg p-2 transition-colors hover:bg-tertiary"
+            className="flex items-center space-x-1 sm:space-x-2 cursor-pointer rounded-lg p-1 sm:p-2 transition-colors hover:bg-tertiary"
             onClick={handleMenuClick}
           >
             <Avatar 
-              className="bg-blue-600 text-white w-8 h-8 text-sm"
+              className="bg-blue-600 text-white w-7 h-7 sm:w-8 sm:h-8 text-xs sm:text-sm"
             >
               {user?.name?.charAt(0).toUpperCase() || 'U'}
             </Avatar>
@@ -93,13 +100,13 @@ const Header: React.FC = () => {
             <Box className="hidden sm:block">
               <Typography 
                 variant="body2" 
-                className="text-primary font-semibold"
+                className="text-primary font-semibold text-xs sm:text-sm"
               >
                 {user?.name}
               </Typography>
               <Typography 
                 variant="caption" 
-                className="text-secondary"
+                className="text-secondary text-xs"
               >
                 {user?.role}
               </Typography>
