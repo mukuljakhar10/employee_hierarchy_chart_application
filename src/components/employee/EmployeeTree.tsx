@@ -23,7 +23,6 @@ const EmployeeTree: React.FC<EmployeeTreeProps> = ({
   const treeRef = useRef<HTMLDivElement>(null);
   const highlightedNodeRef = useRef<HTMLDivElement>(null);
 
-  // Fetch employees on component mount
   useEffect(() => {
     dispatch(fetchEmployees());
   }, [dispatch]);

@@ -1,11 +1,8 @@
 @import 'tailwindcss';
 
-/* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* CSS Custom Properties for Theme Colors */
 :root {
-  /* Light Mode Colors */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
   --bg-tertiary: #f1f5f9;
@@ -19,7 +16,6 @@
 }
 
 .dark {
-  /* Dark Mode Colors */
   --bg-primary: #111827;
   --bg-secondary: #1f2937;
   --bg-tertiary: #374151;
@@ -32,7 +28,6 @@
   --accent-hover: #2563eb;
 }
 
-/* Base styles */
 @layer base {
   html {
     font-family: 'Inter', system-ui, sans-serif;
@@ -49,9 +44,7 @@
   }
 }
 
-/* Component styles */
 @layer components {
-  /* Typography utilities */
   .text-primary {
     color: var(--text-primary);
   }
@@ -68,7 +61,6 @@
     color: #ffffff;
   }
   
-  /* Background utilities */
   .bg-loading {
     background-color: var(--bg-primary);
   }
@@ -81,12 +73,10 @@
     background-color: var(--bg-tertiary);
   }
   
-  /* Spacing utilities */
   .mb-half {
     margin-bottom: 0.5rem;
   }
   
-  /* Hover utilities */
   .hover\:bg-tertiary:hover {
     background-color: var(--bg-tertiary);
   }
@@ -95,25 +85,20 @@
     background-color: rgba(254, 242, 242, 0.5);
   }
   
-  /* Font utilities */
   .font-semibold {
     font-weight: 600;
   }
   
-  /* Flex utilities */
   .flex-grow {
     flex-grow: 1;
   }
   
-  /* Touch-friendly interactions */
   .touch-manipulation {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* Responsive utilities for mobile */
   @media (max-width: 640px) {
-    /* Reduce margins and padding on mobile */
     .dashboard-content {
       margin: 0.75rem !important;
       padding: 1rem !important;
@@ -124,7 +109,6 @@
       margin-bottom: 1rem !important;
     }
     
-    /* Mobile-friendly employee card indentation - override inline style */
     .employee-card-wrapper {
       margin-left: 0 !important;
     }
@@ -145,16 +129,12 @@
       margin-left: 3rem !important;
     }
     
-    /* Smaller tree connector on mobile */
     .tree-connector {
       margin-left: 0.5rem !important;
       padding-left: 0.5rem !important;
     }
   }
   
-  /* Desktop indentation: handled by inline style marginLeft from component */
-  
-  /* Custom scrollbar */
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: var(--border-secondary) var(--bg-secondary);
@@ -204,7 +184,6 @@
     background-size: 10px;
   }
 
-  /* Dark mode scrollbar arrows */
   .dark .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
   }
@@ -213,7 +192,6 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   }
 
-  /* Light mode scrollbar arrows */
   :root .custom-scrollbar::-webkit-scrollbar-button:vertical:start:decrement {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23374151' viewBox='0 0 24 24'%3E%3Cpath d='M7 14l5-5 5 5z'/%3E%3C/svg%3E");
   }
@@ -222,7 +200,6 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23374151' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
   }
   
-  /* Employee card styles */
   .employee-card {
     background-color: var(--bg-primary);
     border: 1px solid var(--border-primary);
@@ -237,7 +214,6 @@
     border-color: var(--accent-primary);
   }
   
-  /* Search input styles */
   .search-input {
     width: 100%;
     padding: 0.5rem 1rem;
@@ -258,7 +234,6 @@
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
   }
   
-  /* Button styles */
   .btn-primary {
     background-color: var(--accent-primary);
     color: white;
@@ -304,7 +279,6 @@
     background-color: var(--bg-tertiary);
   }
   
-  /* Loading spinner */
   .loading-spinner {
     animation: spin 1s linear infinite;
     border-radius: 50%;
@@ -320,14 +294,12 @@
     }
   }
   
-  /* Tree connector lines */
   .tree-connector {
     border-left: 2px solid var(--border-primary);
     margin-left: 1rem;
     padding-left: 1rem;
   }
   
-  /* Highlight animation */
   .highlight {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     background-color: rgba(251, 191, 36, 0.3);
@@ -342,7 +314,6 @@
     }
   }
 
-  /* Login Form Styles */
   .login-background {
     background-image: url('/cosmic-timetraveler.jpg');
     background-size: cover;
@@ -394,7 +365,6 @@
     background-color: #f8bbd9;
   }
 
-  /* Dashboard Styles */
   .dashboard-container {
     background-color: var(--bg-secondary);
     min-height: 100vh;
@@ -421,8 +391,7 @@
     padding: 1rem;
     margin-bottom: 1.5rem;
   }
-
-  /* Menu Dropdown Styles */
+  
   .user-menu-dropdown {
     background-color: var(--bg-primary) !important;
     border: 1px solid var(--border-primary) !important;
