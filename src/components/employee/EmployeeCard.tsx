@@ -88,8 +88,7 @@ const EmployeeCard = forwardRef<HTMLDivElement, EmployeeCardProps>(
 
               {hasSubordinates && (
                 <IconButton
-                  onClick={handleToggleExpand}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
+                  className="text-gray-500 dark:text-gray-400 flex-shrink-0"
                   size="small"
                   sx={{
                     padding: { xs: '4px', sm: '8px' },
